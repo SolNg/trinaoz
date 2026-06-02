@@ -705,7 +705,9 @@ function C(e, n) {
         if (!o) continue;
         if (/^\[.*\]$/.test(o)) continue;
         if (
-          /Phần|Ký ức|Dòng Thời gian|Chữ|Tổng kết cốt truyện|SECTION/i.test(o)
+          /Phần|Ký ức|Dòng Thời gian|Tính cách|Tổng kết cốt truyện|SECTION/i.test(
+            o,
+          )
         )
           continue;
         const a = o.match(/^(.+?)\s*\((.+?)\)$/),
@@ -745,7 +747,9 @@ function C(e, n) {
               else if ("Ký ức:" !== n && "Ký ức:" !== n) {
                 if (
                   ((n.startsWith("Phán đoán Cốt lõi") ||
-                    n.startsWith("Lõi cuối cùng")) &&
+                    n.startsWith("Phán định Cốt lõi") ||
+                    n.startsWith("Lõi cuối cùng") ||
+                    n.startsWith("Cốt lõi Cuối cùng")) &&
                     ((m = !1), (u = !0)),
                   m)
                 ) {
@@ -758,9 +762,16 @@ function C(e, n) {
                   }
                   continue;
                 }
-                if (u && n.startsWith("Lõi cuối cùng")) {
+                if (
+                  u &&
+                  (n.startsWith("Lõi cuối cùng") ||
+                    n.startsWith("Cốt lõi Cuối cùng"))
+                ) {
                   const e = n
-                    .replace(/^Cốt lõi[:：]\s*/, "")
+                    .replace(
+                      /^(Cốt lõi|Lõi cuối cùng|Cốt lõi Cuối cùng)[:：]\s*/,
+                      "",
+                    )
                     .split(/[,，、\s]+/)
                     .filter(Boolean);
                   for (const n of e) {
@@ -791,8 +802,8 @@ function C(e, n) {
               n = e.slice(0, Math.min(3, e.length));
             p.push(...n);
             for (const e of n) {
-              const n = recentMemories.indexOf(e);
-              -1 !== n && recentMemories.splice(n, 1);
+              const n = h.indexOf(e);
+              -1 !== n && h.splice(n, 1);
             }
             for (let n = 0; n < Math.min(3, e.length); n++) {
               const t = d.indexOf(e[n]);
@@ -825,7 +836,9 @@ function C(e, n) {
         const a = o[0].trim();
         if (!a || "[Nhân thiết động]" === a) continue;
         if (
-          /Phần|Ký ức|Dòng Thời gian|Chữ|Tổng kết cốt truyện|SECTION/i.test(a)
+          /Phần|Ký ức|Dòng Thời gian|Tính cách|Tổng kết cốt truyện|SECTION/i.test(
+            a,
+          )
         )
           continue;
         const r = o.slice(1).join("\n").trim();
@@ -874,7 +887,7 @@ function C(e, n) {
               : n.startsWith("Phương thức Hành vi:") ||
                   n.startsWith("Phương thức Hành vi: ")
                 ? (a.behaviors = n
-                    .replace(/^Hành vi[:：]\s*/, "")
+                    .replace(/^Phương thức Hành vi[:：]\s*/, "")
                     .split(/[,，、]/)
                     .map((e) => e.trim())
                     .filter(Boolean))
@@ -2731,8 +2744,8 @@ async function Z(e, n, t) {
         if ("Thông tin nền tảng: " === m || "Thông tin nền tảng: " === m)
           t = {
             basic: X(d, "Thông tin nền tảng"),
-            appearance: X(d, "Đặc điểm vật lý"),
-            background: X(d, "Cài đặt nền"),
+            appearance: X(d, "Đặc điểm ngoại hình"),
+            background: X(d, "Bối cảnh thiết lập"),
             relationship: X(d, "Thiết lập quan hệ"),
           };
         else if ("Bảng màu Chữ: " === m || "Bảng màu Chữ: " === m) {
@@ -2789,7 +2802,9 @@ async function Z(e, n, t) {
               n.startsWith("Trong lúc hành sự cực kỳ căm ghét: ") ||
               n.startsWith("Trong lúc hành sự cực kỳ căm ghét: ")
             ) {
-              const e = n.replace(/^Không thích[:：]\s*/, "").trim();
+              const e = n
+                .replace(/^Trong lúc hành sự cực kỳ căm ghét[:：]\s*/, "")
+                .trim();
               e && "Không có" !== e && l.push(e);
             } else if (n.startsWith("Thích:") || n.startsWith("Thích:")) {
               const e = n.replace(/^Thích[:：]\s*/, "").trim();
